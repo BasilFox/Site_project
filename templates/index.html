@@ -2,28 +2,24 @@
 
 {% block content %}
 <meta charset="UTF-8">
-<h2 align="center">Список работ</h2>
-{% for job in jobs %}
-<h3>Action # {{ job.id }}</h3>
+<h2 align="center">Список мероприятий</h2>
+{% for meet in meetings %}
+<h3>Мероприятие # {{ meet.id }}</h3>
 <div class="table_container">
     <table class="my_table">
         <tr class="my_row">
-            <td class="title" width="400px" bgcolor="#dddddd">Title of activity</td>
-            <td class="title" width="150px" bgcolor="#dddddd">Team leader</td>
-            <td class="title" width="100px" bgcolor="#dddddd" align="center">Duration</td>
-            <td class="title" width="200px" bgcolor="#dddddd" align="center">List of collaborators</td>
-            <td class="title" width="100px" bgcolor="#dddddd" align="center">Is finished</td>
+            <td class="title" width="400px" bgcolor="#dddddd">Что делаем.</td>
+            <td class="title" width="150px" bgcolor="#dddddd">Кто делает.</td>
+            <td class="title" width="100px" bgcolor="#dddddd" align="center">Когда.</td>
+            <td class="title" width="200px" bgcolor="#dddddd" align="center">Сколько людей ждём.</td>
+            <td class="title" width="100px" bgcolor="#dddddd" align="center">Сколько придёт.</td>
         </tr>
         <tr class="my_row">
-            <td class="ordinary" bgcolor="#eeeeff">{{ job.job.capitalize() }}</td>
-            <td class="ordinary" bgcolor="#eeeeff">{{ names[job.team_leader] }}</td>
-            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ job.work_size }} hours</td>
-            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ job.collaborators }}</td>
-            {% if job.is_finished %}
-            <td class="ordinary" bgcolor="#eeffee" align="center">Finished</td>
-            {% else %}
-            <td class="ordinary" bgcolor="#ffeeff" align="center">Is not finished</td>
-            {% endif %}
+            <td class="ordinary" bgcolor="#eeeeff">{{ meet.meeting.capitalize() }}</td>
+            <td class="ordinary" bgcolor="#eeeeff">{{ names[meet.team_leader] }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.meet_date }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.people_need }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.people_go }}</td>
         </tr>
 
     </table>
