@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css"/>
     <title>{{title}}</title>
 </head>
-  <body>
-    <header>
-      <nav class="navbar navbar-light bg-light">
-          <a  href="/register" class="navbar-brand">Tochka Register</a>
-          <a  href="/login" class="navbar-brand">Tochka Login</a>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <a href="/#" class="navbar-brand">Basil's project </a>
+        <a href="/logout" class="navbar-brand">Tochka Logout</a>
 
-      </nav>
-        <h1>Точка сбора</h1>
-    </header>
-    <!-- Begin page content -->
-    <main role="main" class="container">
-        {% block content %}{% endblock %}
-    </main>
-  </body>
+    </nav>
+    <h1><a href="/index" style="color: black">Точка сбора</a></h1>
+</header>
+<!-- Begin page content -->
+<main role=" main" class="container">
+    {% block content %}{% endblock %}
+</main>
+</body>
 </html>

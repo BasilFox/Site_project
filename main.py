@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect
-from flask_login import LoginManager, login_user
+from flask import Flask, render_template, redirect, url_for
+from flask_login import LoginManager, login_user, login_required, current_user,logout_user
 
 from data import db_session
 from data.meetings import Meeting
@@ -21,16 +21,21 @@ def load_user(user_id):
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
     db_session.global_init("db/tochka_sbora.sqlite")
     session = db_session.create_session()
     vstrechy = session.query(Meeting).all()
     orgs = {}
-    for meet in session.query(Meeting).all():
-        for user in session.query(User).filter(User.id == meet.team_leader):
-            leader = f'{user.name} {user.surname}'
-            orgs[meet.team_leader] = leader
-    return render_template('index.html', meetings=vstrechy, names=orgs)
+    if current_user.is_authenticated:
+        for meet in session.query(Meeting).all():
+            for user in session.query(User).filter(User.id == meet.team_leader):
+                leader = f'{user.name} {user.surname}'
+                orgs[meet.team_leader] = leader
+        return render_template('index.html', meetings=vstrechy, names=orgs)
+    else:
+        form = LoginForm()
+        return render_template('login.html', title='Авторизация', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -73,6 +78,24 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.after_request
+def redirect_to_sign(response):
+    if response.status_code == 401:
+        return redirect(url_for('login'))
+
+    return response
+
+
+@app.route('/admin')
+@login_required
+def admin():
+    return '<h1>Admin page</h1>'
 
 
 if __name__ == '__main__':

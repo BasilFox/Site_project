@@ -3,6 +3,7 @@
 {% block content %}
 <h1>Авторизация</h1>
 <form action="" method="post">
+    <button class="btn btn-primary" ><a href="/register" style="color: white">Регистрация</a></button>
     {{ form.hidden_tag() }}
     <p>
         {{ form.email.label }}<br>
@@ -23,6 +24,7 @@
     {% endfor %}
     </p>
     <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     <div>{{ message }}</div>
 </form>
