@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta charset="UTF-8">
+
+{% for meet in meetings %}
+<h2 align="center">{{ meet.meeting }}</h2>
+<div class="table_container" align="center">
+    <table class="my_table">
+        <tr class="my_row">
+            <td class="title" width="250px" bgcolor="#dddddd">Что делаем.</td>
+            <td class="title" width="150px" bgcolor="#dddddd">Кто делает.</td>
+            <td class="title" width="100px" bgcolor="#dddddd" align="center">Когда: Дата.</td>
+            <td class="title" width="100px" bgcolor="#dddddd" align="center">Когда: Время.</td>
+            <td class="title" width="200px" bgcolor="#dddddd" align="center">Где</td>
+            <td class="title" width="200px" bgcolor="#dddddd" align="center">Сколько людей ждём.</td>
+            <td class="title" width="100px" bgcolor="#dddddd" align="center">Сколько придёт.</td>
+        </tr>
+        <tr class="my_row">
+            <td class="ordinary" bgcolor="#eeeeff">{{ meet.meeting.capitalize() }}</td>
+            <td class="ordinary" bgcolor="#eeeeff">{{ names[meet.team_leader] }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.meet_date }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.meet_time }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.place }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.people_need }}</td>
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{ meet.people_go }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<h2 align="center">Кто идёт</h2>
+<div class="table_container" align="center">
+
+{% for man in competitors %}
+
+    <table class="my_table">
+        <tr class="my_row">
+            <td class="title" width="1100px" bgcolor="#dddddd" align="center">Пользователь.</td>
+        </tr>
+        <tr class="my_row">
+            <td class="ordinary" bgcolor="#eeeeff" align="center">{{man}}</td>
+
+        </tr>
+
+    </table>
+</div>
+<body>
+<img src="{{image}}" alt="Нет">
+</body>
+{% endfor %}
+
+{% endblock %}

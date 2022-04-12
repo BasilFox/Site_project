@@ -20,6 +20,5 @@ class Meeting(SqlAlchemyBase, UserMixin, SerializerMixin):
     meet_date = sqlalchemy.Column(sqlalchemy.Date, default=(datetime.datetime.now().date()))
     team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     user = orm.relation('User')
-    map_place = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # def __repr__(self):
     # return f'<Job> {self.job}'

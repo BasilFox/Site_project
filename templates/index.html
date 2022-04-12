@@ -5,7 +5,7 @@
 <h2 align="center">Список мероприятий</h2>
 <button class="btn btn-primary"> <a href="/addevent" style="color: white">Добавить</a> </button>
 {% for meet in meetings %}
-<h3><a href="/#" style="color: black">Мероприятие # {{ meet.id }}</a></h3>
+<h3><a href="/event/{{ meet.id }}" style="color: black">Мероприятие # {{ meet.id }}</a></h3>
 <div class="table_container">
     <table class="my_table">
         <tr class="my_row">
