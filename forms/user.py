@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, BooleanField, SubmitField, EmailField, IntegerField
+from wtforms import PasswordField, StringField, BooleanField, SubmitField, EmailField, IntegerField, \
+    DateField, TimeField
 from wtforms.validators import DataRequired
 
 
@@ -18,3 +19,13 @@ class RegisterForm(FlaskForm):
     name = StringField('Имя пользователя', validators=[DataRequired()])
     age = IntegerField('Возраст', validators=[DataRequired()])
     submit = SubmitField('Войти')
+
+
+class AddForm(FlaskForm):
+    event = StringField('Что делаем', validators=[DataRequired()])
+    eventplace = StringField('Где собираемся', validators=[DataRequired()])
+    eventdate = DateField('Когда: День', format='%Y-%m-%d', validators=[DataRequired()])
+    eventtime = TimeField('Когда: Время', validators=[DataRequired()])
+    peopleneed = IntegerField('Сколько людей нужно', validators=[DataRequired()])
+    peoplehave = IntegerField('Сколько людей идёт', validators=[DataRequired()])
+    submit = SubmitField('Добавить')
