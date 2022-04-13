@@ -2,8 +2,26 @@
 
 {% block content %}
 <meta charset="UTF-8">
+<style >
+.btn-primaro{
 
+background-color: red;
+
+color: white;
+
+}
+
+.btn-primaru{
+
+background-color: green;
+
+color: white;
+
+}
+</style>
+{% set a = meetings[0].id %}
 {% for meet in meetings %}
+{% set a = meet.id %}
 <h2 align="center">{{ meet.meeting }}</h2>
 <div class="table_container" align="center">
     <table class="my_table">
@@ -31,7 +49,7 @@
 <h2 align="center">Кто идёт</h2>
 <div class="table_container" align="center">
 
-{% for man in competitors %}
+    {% for man in competitors %}
 
     <table class="my_table">
         <tr class="my_row">
@@ -44,9 +62,30 @@
 
     </table>
 </div>
-<body>
-<img src="{{image}}" alt="Нет">
-</body>
 {% endfor %}
+<div>
+    <body>
+    <h2 align="left">Место встречи на карте</h2>
+    <img src="{{image}}" alt="Не получилось сформировать изображение">
+    </body>
+</div>
+<div>
+    {% if leaderid==current_user %}
+    <body>
+    <button class="btn btn-primary" style="color: #03c03c"><a href="/edit/{{a}}" style="color: white">
+        Редактировать</a>
+    </button>
+    <button class="btn btn-primaro" style="color: #03c03c"><a href="/delete/{{a}}" style="color: white">
+        Удалить</a>
+    </button>
+
+
+    {%else%}
+    <button class="btn btn-primaru" style="color: #03c03c"><a href="#" style="color: white">
+        Записаться</a>
+    </button>
+    </body></div>
+{% endif %}
+
 
 {% endblock %}

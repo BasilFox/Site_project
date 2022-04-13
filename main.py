@@ -8,9 +8,9 @@ from data import db_session
 from data.meetings import Meeting
 from data.peoplego import Iamgo
 from data.users import User
-from forms.user import RegisterForm, LoginForm, AddForm
+from forms.user import RegisterForm, LoginForm, AddForm, EditEventForm
 
-imgdir = os.path.join('static', 'img')
+imgdir = os.path.join('http://127.0.0.1:8080', 'static', 'img')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['UPLOAD_FOLDER'] = imgdir
@@ -34,12 +34,13 @@ def index():
     session = db_session.create_session()
     vstrechy = session.query(Meeting).all()
     orgs = {}
+    title = 'Точка сбора!'
     if current_user.is_authenticated:
         for meet in session.query(Meeting).all():
             for user in session.query(User).filter(User.id == meet.team_leader):
                 leader = f'{user.name} {user.surname}'
                 orgs[meet.team_leader] = leader
-        return render_template('index.html', meetings=vstrechy, names=orgs)
+        return render_template('index.html', meetings=vstrechy, names=orgs, title=title)
     else:
         form = LoginForm()
         return render_template('login.html', title='Авторизация', form=form)
@@ -167,7 +168,6 @@ def admin():
     return '<h1>Admin page</h1>'
 
 
-
 @app.route('/event/<eventnum>')
 @login_required
 def eventview(eventnum):
@@ -178,22 +178,103 @@ def eventview(eventnum):
     orgs = {}
     people = []
     image = ''
+    leaderid = 0
+    title = ''
     if current_user.is_authenticated:
-        for meet in session.query(Meeting).all():
+        for meet in session.query(Meeting).filter(Meeting.id == eventnum).all():
             for user in session.query(User).filter(User.id == meet.team_leader):
                 leader = f'{user.name} {user.surname}'
                 orgs[meet.team_leader] = leader
+                leaderid = meet.team_leader
+                title = meet.meeting
                 image = os.path.join(app.config['UPLOAD_FOLDER'], f'{meet.id}.jpg')
         for user in peoplego:
             for id in session.query(User).filter(User.id == user.user_id):
                 man = f'{id.name} {id.surname}'
                 people.append(man)
-        print(image)
         return render_template('showevent.html', meetings=vstrechy, names=orgs, competitors=people,
-                               image=image)
+                               image=image, leaderid=leaderid, current_user=current_user.id,
+                               title=title)
     else:
         form = LoginForm()
         return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/delete/<eventnum>')
+@login_required
+def delete(eventnum):
+    db_session.global_init("db/tochka_sbora.sqlite")
+    session = db_session.create_session()
+    id_fordel = eventnum
+    event = (session.query(Meeting).filter(Meeting.id == eventnum).all()[0]).meeting
+    if current_user.is_authenticated:
+        return render_template('delete.html', eventid=id_fordel, event=event)
+    else:
+        form = LoginForm()
+        return render_template('login.html', title='Авторизация', form=form, )
+
+
+@app.route('/realdelete/<eventnum>')
+@login_required
+def realdelete(eventnum):
+    db_session.global_init("db/tochka_sbora.sqlite")
+    session = db_session.create_session()
+    id_fordel = eventnum
+
+    if current_user.is_authenticated:
+        session.query(Meeting).filter(Meeting.id == eventnum).delete()
+        session.query(Iamgo).filter(Iamgo.meet_id == eventnum).delete()
+        session.commit()
+        os.remove(f'static/img/{id_fordel}.jpg')
+        return render_template('deletesuc.html', eventid=id_fordel)
+    else:
+        form = LoginForm()
+        return render_template('login.html', title='Авторизация', form=form, )
+
+
+@app.route('/edit/<eventnum>', methods=['GET', 'POST'])
+@login_required
+def edit(eventnum):
+    db_session.global_init("db/tochka_sbora.sqlite")
+    session = db_session.create_session()
+    id_fordel = eventnum
+    form = EditEventForm()
+    if form.validate_on_submit():
+        session.query(Meeting).filter(Meeting.id == eventnum).update(
+            {Meeting.place: form.eventplace.data, Meeting.meet_date: form.eventdate.data,
+             Meeting.meet_time: form.eventtime.data, Meeting.people_need: form.peopleneed.data})
+        session.commit()
+        os.remove(f'static/img/{id_fordel}.jpg')
+        meet = session.query(Meeting).filter(Meeting.id == eventnum).first()
+        toponym_to_find = meet.place
+
+        geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+
+        geocoder_params = {
+            "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+            "geocode": toponym_to_find,
+            "format": "json"}
+        response1 = requests.get(geocoder_api_server, params=geocoder_params).json()
+        json_response = response1
+        toponym = json_response["response"]["GeoObjectCollection"][
+            "featureMember"][0]["GeoObject"]
+        server = "http://static-maps.yandex.ru/1.x"
+        toponym_coodrinates = toponym["Point"]["pos"]
+        toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+        params = {
+            'll': ','.join([toponym_longitude, toponym_lattitude]),
+            'z': 17,
+            'l': 'map',
+            "pt": f"{toponym_longitude},{toponym_lattitude},pm2dbl"
+        }
+        response = requests.get(server, params=params)
+        if response:
+            map_file = f"static/img/{meet.id}.jpg"
+            with open(map_file, "wb") as file:
+                file.write(response.content)
+        return redirect('/index')
+
+    return render_template('edit.html', eventid=id_fordel, form=form)
 
 
 if __name__ == '__main__':

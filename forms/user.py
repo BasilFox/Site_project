@@ -29,3 +29,11 @@ class AddForm(FlaskForm):
     peopleneed = IntegerField('Сколько людей нужно', validators=[DataRequired()])
     peoplehave = IntegerField('Сколько людей идёт', validators=[DataRequired()])
     submit = SubmitField('Добавить')
+
+
+class EditEventForm(FlaskForm):
+    eventplace = StringField('Где собираемся', validators=[DataRequired()])
+    eventdate = DateField('Когда: День', format='%Y-%m-%d', validators=[DataRequired()])
+    eventtime = TimeField('Когда: Время', validators=[DataRequired()])
+    peopleneed = IntegerField('Сколько людей нужно', validators=[DataRequired()])
+    submit = SubmitField('Сохранить изменения')
