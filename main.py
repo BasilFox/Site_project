@@ -311,7 +311,21 @@ def ianotmgo(eventnum):
 
         session.commit()
         return redirect(f'/event/{id_fordel}')
+@app.route('/myevents', methods=['GET', 'POST'])
+@login_required
+def myevents():
+    db_session.global_init("db/tochka_sbora.sqlite")
+    session = db_session.create_session()
+    id_fordel = current_user.id
+    events = session.query(Iamgo).filter(Iamgo.user_id == id_fordel).all()
+    print(list(events))
+    sp =[]
+    if current_user.is_authenticated:
+        for event in events:
+            sp.append(event.meet_id)
 
+            session.commit()
+        return render_template('myevents.html', title='Мои события.', sp=sp )
 
 if __name__ == '__main__':
     app.run(port=8080, host='127.0.0.1')

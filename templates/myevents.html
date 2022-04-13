@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta charset="UTF-8">
+
+{% for meet in sp %}
+{% set a = meet.id %}
+<div>
+    <h4 align="left"><a href="/event/{{meet}}" style="color: black">Мероприятие # {{ meet}}</a></h4>
+    {% endfor %}
+
+</div>
+
+
+{% endblock %}
