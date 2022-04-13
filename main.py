@@ -180,6 +180,7 @@ def eventview(eventnum):
     image = ''
     leaderid = 0
     title = ''
+    flag = False
     if current_user.is_authenticated:
         for meet in session.query(Meeting).filter(Meeting.id == eventnum).all():
             for user in session.query(User).filter(User.id == meet.team_leader):
@@ -189,12 +190,14 @@ def eventview(eventnum):
                 title = meet.meeting
                 image = os.path.join(app.config['UPLOAD_FOLDER'], f'{meet.id}.jpg')
         for user in peoplego:
+            if user.user_id == current_user.id:
+                flag = True
             for id in session.query(User).filter(User.id == user.user_id):
                 man = f'{id.name} {id.surname}'
                 people.append(man)
         return render_template('showevent.html', meetings=vstrechy, names=orgs, competitors=people,
                                image=image, leaderid=leaderid, current_user=current_user.id,
-                               title=title)
+                               title=title, flag=flag)
     else:
         form = LoginForm()
         return render_template('login.html', title='Авторизация', form=form)
@@ -275,6 +278,39 @@ def edit(eventnum):
         return redirect('/index')
 
     return render_template('edit.html', eventid=id_fordel, form=form)
+
+
+@app.route('/iamgo/<eventnum>', methods=['GET', 'POST'])
+@login_required
+def iamgo(eventnum):
+    db_session.global_init("db/tochka_sbora.sqlite")
+    session = db_session.create_session()
+    id_fordel = eventnum
+    if current_user.is_authenticated:
+        session.query(Meeting).filter(Meeting.id == eventnum).update(
+            {Meeting.people_go: Meeting.people_go + 1})
+        event = Iamgo()
+        event.user_id = current_user.id
+        event.meet_id = id_fordel
+        session.add(event)
+        session.commit()
+        return redirect(f'/event/{id_fordel}')
+
+
+@app.route('/iamnotgo/<eventnum>', methods=['GET', 'POST'])
+@login_required
+def ianotmgo(eventnum):
+    db_session.global_init("db/tochka_sbora.sqlite")
+    session = db_session.create_session()
+    id_fordel = eventnum
+    if current_user.is_authenticated:
+        session.query(Iamgo).filter(Iamgo.user_id == current_user.id,
+                                    Iamgo.meet_id == eventnum).delete()
+        session.query(Meeting).filter(Meeting.id == eventnum).update(
+            {Meeting.people_go: Meeting.people_go - 1})
+
+        session.commit()
+        return redirect(f'/event/{id_fordel}')
 
 
 if __name__ == '__main__':
