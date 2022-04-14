@@ -5,3 +5,4 @@ requests~=2.27.1
 Flask~=2.0.3
 flask-wtf
 flask-login
+sqlalchemy_serializer
