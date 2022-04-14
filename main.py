@@ -122,9 +122,8 @@ def addevent():
         }
         response = requests.get(server, params=params)
         if response:
-            map_file = f"static/img/{meet.id}.jpg"
-            with open(map_file, "wb") as file:
-                file.write(response.content)
+            map_file = open(f"static/img/{meet.id}.jpg", 'wb')
+            map_file.write(response.content)
         return redirect('/index')
     return render_template('add.html', title='Новое событие', form=form)
 
