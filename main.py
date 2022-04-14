@@ -10,7 +10,7 @@ from data.peoplego import Iamgo
 from data.users import User
 from forms.user import RegisterForm, LoginForm, AddForm, EditEventForm
 
-imgdir = os.path.join('http://127.0.0.1:8080', 'static', 'img')
+imgdir = os.path.join('https://sborpoint.herokuapp.com', 'static', 'img')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['UPLOAD_FOLDER'] = imgdir
@@ -122,8 +122,9 @@ def addevent():
         }
         response = requests.get(server, params=params)
         if response:
-            map_file = open(f"static/img/{meet.id}.jpg", 'wb')
-            map_file.write(response.content)
+            map_file = f"static/img/{meet.id}.jpg"
+            with open(map_file, "wb") as file:
+                file.write(response.content)
         return redirect('/index')
     return render_template('add.html', title='Новое событие', form=form)
 
