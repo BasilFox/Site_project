@@ -10,7 +10,7 @@ from data.peoplego import Iamgo
 from data.users import User
 from forms.user import RegisterForm, LoginForm, AddForm, EditEventForm
 
-imgdir = os.path.join('https://sborpoint.herokuapp.com', 'static', 'img')
+imgdir = os.path.join('https://bigassembling.herokuapp.com', 'static', 'img')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['UPLOAD_FOLDER'] = imgdir
