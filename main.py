@@ -29,7 +29,7 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/homepage')
 def homepage():
-    return render_template('homepage.html', )
+    return render_template('homepage.html', title="Большая сборка")
 @app.route('/index')
 @login_required
 def index():
@@ -37,7 +37,7 @@ def index():
     session = db_session.create_session()
     vstrechy = session.query(Meeting).all()
     orgs = {}
-    title = 'Точка сбора!'
+    title = 'Большая сборка!'
     if current_user.is_authenticated:
         for meet in session.query(Meeting).all():
             for user in session.query(User).filter(User.id == meet.team_leader):
