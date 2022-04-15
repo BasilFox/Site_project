@@ -27,6 +27,9 @@ def load_user(user_id):
 
 
 @app.route('/')
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html', )
 @app.route('/index')
 @login_required
 def index():

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta charset="UTF-8">
+<style>
+.btn-primaro{
+
+background-color: red;
+
+color: white;
+
+}
+
+.btn-primaru{
+
+background-color: green;
+
+color: white;
+
+}
+
+
+
+
+
+
+
+</style>
+<div align="center">
+    <h2 align="center">"Большая сборка" это сайт который помогает объденится людям что хотят делать
+        что-то вместе но не могут найти для этого достаточно много народу. Войдите или
+        зарегистрируйтесь чтобы создать своё событие или присоединитесь к другим</h2>
+    <body>
+    <img src="https://sborpoint.herokuapp.com/static/img/sborka.png"
+         alt="Не получилось сформировать изображение">
+    </body>
+
+    <body>
+    <button class="btn btn-primary" style="color: #03c03c"><a href="/login"
+                                                              style="color: white">
+        Войти</a>
+    </button>
+    <button class="btn btn-primary" style="color: #03c03c"><a href="/register"
+                                                              style="color: white">
+        Зарегистрироваться</a>
+    </button>
+    </body>
+</div>
+
+{% endblock %}
