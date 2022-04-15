@@ -30,6 +30,8 @@ def load_user(user_id):
 @app.route('/homepage')
 def homepage():
     return render_template('homepage.html', title="Большая сборка")
+
+
 @app.route('/index')
 @login_required
 def index():
@@ -143,7 +145,7 @@ def login():
         print(user_now)
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            return redirect("/")
+            return redirect("/index")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
